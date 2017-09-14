@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Payment Request API demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/9.3.0/build.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Payment Request API demo</h1>
+      <div class="columns">
+        <div class="one-half column">
+          <h2>Pattern A</h2>
+          <form>
+            <dl class="form-group">
+              <dt><label>Item A</label></dt>
+              <dd>
+                <button class="btn btn-primary demo-a" type="button" data-label="Item A" data-value="100">¥100</button>
+              </dd>
+            </dl>
+            <dl class="form-group">
+              <dt><label>Item B</label></dt>
+              <dd>
+                  <button class="btn btn-primary demo-a" type="button" data-label="Item B" data-value="200">¥200</button>
+              </dd>
+            </dl>
+            <dl class="form-group">
+              <dt><label>Item C</label></dt>
+              <dd>
+                <button class="btn btn-primary demo-a" type="button" data-label="Item C" data-value="300">¥300</button>
+              </dd>
+            </dl>
+            <dl class="form-group">
+              <dt><label>Item D</label></dt>
+              <dd>
+                <button class="btn btn-primary demo-a" type="button" data-label="Item D" data-value="500">¥500</button>
+              </dd>
+            </dl>
+            <dl class="form-group">
+              <dt><label>Item E</label></dt>
+              <dd>
+                <button class="btn btn-primary demo-a" type="button" data-label="Item E" data-value="1000">¥1000</button>
+              </dd>
+            </dl>
+          </form>
+        </div>
+        <div class="one-half column">
+          <h2>Pattern B</h2>
+          <form>
+            <div class="form-checkbox">
+              <label>
+                <input type="checkbox" data-label="Item A" value="100" checked> Item A ¥100
+              </label>
+            </div>
+            <div class="form-checkbox">
+              <label>
+                <input type="checkbox" data-label="Item B" value="200"> Item B ¥200
+              </label>
+            </div>
+            <div class="form-checkbox">
+              <label>
+                <input type="checkbox" data-label="Item C" value="300"> Item C ¥300
+              </label>
+            </div>
+            <div class="form-checkbox">
+              <label>
+                <input type="checkbox" data-label="Item D" value="500"> Item D ¥500
+              </label>
+            </div>
+            <div class="form-checkbox">
+              <label>
+                <input type="checkbox" data-label="Item E" value="1000"> Item E ¥1000
+              </label>
+            </div>
+            <div>
+              <button class="btn btn-primary demo-b" type="button">OK, Let's pay!</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
