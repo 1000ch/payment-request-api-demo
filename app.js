@@ -1,4 +1,45 @@
-const onClickDemoA = e => {
+function timeout(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(reject, ms);
+  });
+}
+
+function pay(details) {
+  new PaymentRequest([{
+    supportedMethods: ['basic-card'],
+    data: {
+      supportedNetworks: [
+        'visa',
+        'mastercard',
+        'amex',
+        'diners',
+        'jcb'
+      ]
+    }
+  }], details).show().then(result => {
+    return Promise.race([
+      timeout(2000),
+      fetch('/pay', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(result.toJSON())
+      })
+    ])
+    .then(response => {
+      if (response.status === 200) {
+        return result.complete('success');
+      } else {
+        return result.complete('fail');
+      }
+    })
+    .catch(() => result.complete('fail'));
+  });
+}
+
+function onClickDemoA(e) {
   pay({
     displayItems: [{
       label: e.target.dataset.label,
@@ -11,22 +52,22 @@ const onClickDemoA = e => {
       label: 'Total due',
       amount: {
         currency: 'JPY',
-        value : e.target.dataset.value
+        value: e.target.dataset.value
       }
     }
   });
-};
+}
 
 function onClickDemoB() {
-  const selected = Array
+  const checkboxes = Array
     .from(document.querySelectorAll('input[type=checkbox]'))
     .filter(checkbox => checkbox.checked);
 
-  if (selected.length === 0) {
+  if (checkboxes.length === 0) {
     return;
   }
 
-  const displayItems = selected.map(checkbox => {
+  const displayItems = checkboxes.map(checkbox => {
     return {
       label: checkbox.dataset.label,
       amount: {
@@ -36,7 +77,7 @@ function onClickDemoB() {
     };
   });
 
-  const value = selected
+  const value = checkboxes
     .map(checkbox => Number(checkbox.value))
     .reduce((previous, current) => previous + current);
 
@@ -49,39 +90,6 @@ function onClickDemoB() {
         value
       }
     }
-  });
-}
-
-function pay(details) {
-  new PaymentRequest([{
-    supportedMethods: ['basic-card'],
-    data: {
-      supportedNetworks: [
-        'visa',
-        'mastercard',
-        'amex',
-        'discover',
-        'diners',
-        'jcb'
-      ]
-    }
-  }], details).show().then(result => {
-    return fetch('/pay', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(result.toJSON())
-    })
-    .then(response => {
-      if (response.status === 200) {
-        return result.complete('success');
-      } else {
-        return result.complete('fail');
-      }
-    })
-    .catch(() => result.complete('fail'));
   });
 }
 
