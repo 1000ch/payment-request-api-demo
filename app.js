@@ -4,8 +4,8 @@ function timeout(ms) {
   });
 }
 
-function pay(details) {
-  new PaymentRequest([{
+async function pay(details) {
+  const modal = new PaymentRequest([{
     supportedMethods: ['basic-card'],
     data: {
       supportedNetworks: [
@@ -16,8 +16,11 @@ function pay(details) {
         'jcb'
       ]
     }
-  }], details).show().then(result => {
-    return Promise.race([
+  }], details);
+  const result = await modal.show();
+
+  try {
+    const response = await Promise.race([
       timeout(2000),
       fetch('/pay', {
         method: 'POST',
@@ -27,47 +30,50 @@ function pay(details) {
         },
         body: JSON.stringify(result.toJSON())
       })
-    ])
-    .then(response => {
-      if (response.status === 200) {
-        return result.complete('success');
-      } else {
-        return result.complete('fail');
-      }
-    })
-    .catch(() => result.complete('fail'));
-  });
+    ]);
+
+    if (response.status === 200) {
+      result.complete('success');
+    } else {
+      result.complete('fail');
+    }
+  } catch (error) {
+    result.complete('fail');
+  }
 }
 
 function onClickDemoA(e) {
+  e.preventDefault();
+  const clickedButton = e.target;
+
   pay({
     displayItems: [{
-      label: e.target.dataset.label,
+      label: clickedButton.dataset.label,
       amount: {
         currency: 'JPY',
-        value: e.target.dataset.value
+        value: clickedButton.dataset.value
       }
     }],
     total: {
       label: 'Total due',
       amount: {
         currency: 'JPY',
-        value: e.target.dataset.value
+        value: clickedButton.dataset.value
       }
     }
   });
 }
 
-function onClickDemoB() {
-  const checkboxes = Array
-    .from(document.querySelectorAll('input[type=checkbox]'))
-    .filter(checkbox => checkbox.checked);
+function onClickDemoB(e) {
+  e.preventDefault();
+  const checkboxes = Array.from(document.querySelectorAll('input[type=checkbox]'));
+  const checkedCheckboxes = checkboxes.filter(checkbox => checkbox.checked);
 
-  if (checkboxes.length === 0) {
+  if (checkedCheckboxes.length === 0) {
     return;
   }
 
-  const displayItems = checkboxes.map(checkbox => {
+  const displayItems = checkedCheckboxes.map(checkbox => {
     return {
       label: checkbox.dataset.label,
       amount: {
@@ -77,7 +83,7 @@ function onClickDemoB() {
     };
   });
 
-  const value = checkboxes
+  const value = checkedCheckboxes
     .map(checkbox => Number(checkbox.value))
     .reduce((previous, current) => previous + current);
 
