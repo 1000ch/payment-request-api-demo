@@ -4,20 +4,64 @@ function timeout(ms) {
   });
 }
 
+const basicCard = {
+  supportedMethods: ['basic-card'],
+  data: {
+    supportedNetworks: [
+      'visa',
+      'mastercard',
+      'amex',
+      'diners',
+      'jcb'
+    ]
+  }
+};
+
+const payWithGoogle = {
+  supportedMethods: ['https://google.com/pay'],
+  data: {
+    // Merchant ID available after approval by Google.
+    // 'merchantId':'01234567890123456789',
+    environment: 'TEST',
+    apiVersion: 1,
+    allowedPaymentMethods: [
+      'CARD',
+      'TOKENIZED_CARD'
+    ],
+    paymentMethodTokenizationParameters: {
+      tokenizationType: 'PAYMENT_GATEWAY',
+      // Check with your payment gateway on the parameters to pass.
+      parameters: {}
+    },
+    cardRequirements: {
+      allowedCardNetworks: [
+        'AMEX',
+        'DISCOVER',
+        'MASTERCARD',
+        'VISA'
+      ],
+      billingAddressRequired: true,
+      billingAddressFormat: 'MIN'
+    },
+    phoneNumberRequired: true,
+    emailRequired: true,
+    shippingAddressRequired: true
+  }
+};
+
 async function pay(details) {
-  const modal = new PaymentRequest([{
-    supportedMethods: ['basic-card'],
-    data: {
-      supportedNetworks: [
-        'visa',
-        'mastercard',
-        'amex',
-        'diners',
-        'jcb'
-      ]
-    }
-  }], details);
-  const result = await modal.show();
+  const request = new PaymentRequest([
+    basicCard,
+    payWithGoogle
+  ], details);
+
+  const paymentAvailable = await request.canMakePayment();
+
+  if (!paymentAvailable) {
+    return;
+  }
+
+  const result = await request.show();
 
   try {
     const response = await Promise.race([
