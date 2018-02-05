@@ -67,12 +67,6 @@ async function pay(details) {
     googlePay
   ], details);
 
-  const paymentAvailable = await request.canMakePayment();
-
-  if (!paymentAvailable) {
-    return;
-  }
-
   const result = await request.show();
 
   try {
