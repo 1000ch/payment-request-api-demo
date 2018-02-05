@@ -5,7 +5,7 @@ function timeout(ms) {
 }
 
 const basicCard = {
-  supportedMethods: ['basic-card'],
+  supportedMethods: 'basic-card',
   data: {
     supportedNetworks: [
       'visa',
@@ -17,8 +17,19 @@ const basicCard = {
   }
 };
 
-const payWithGoogle = {
-  supportedMethods: ['https://google.com/pay'],
+const applePay = {
+  supportedMethods: 'https://apple.com/apple-pay',
+  data: {
+    version: 2,
+    merchantIdentifier: '',
+    merchantCapabilities: ['supports3DS'],
+    supportedNetworks: ['visa', 'masterCard'],
+    countryCode: 'US',
+  },
+};
+
+const googlePay = {
+  supportedMethods: 'https://google.com/pay',
   data: {
     // Merchant ID available after approval by Google.
     // 'merchantId':'01234567890123456789',
@@ -52,7 +63,8 @@ const payWithGoogle = {
 async function pay(details) {
   const request = new PaymentRequest([
     basicCard,
-    payWithGoogle
+    applePay,
+    googlePay
   ], details);
 
   const paymentAvailable = await request.canMakePayment();
