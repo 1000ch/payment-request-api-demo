@@ -25,7 +25,7 @@ const applePay = {
     merchantCapabilities: ['supports3DS'],
     supportedNetworks: ['visa', 'masterCard'],
     countryCode: 'US',
-  },
+  }
 };
 
 const googlePay = {
