@@ -60,11 +60,16 @@ const googlePay = {
   }
 };
 
+const bobPay = {
+  supportedMethods: 'https://bobpay.xyz/pay',
+};
+
 async function pay(details) {
   const request = new PaymentRequest([
     basicCard,
     applePay,
-    googlePay
+    googlePay,
+    bobPay
   ], details);
 
   const result = await request.show();
