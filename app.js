@@ -64,12 +64,17 @@ const bobPay = {
   supportedMethods: 'https://bobpay.xyz/pay',
 };
 
+const paymentAppDemo = {
+  supportedMethods: 'https://1000ch.github.io/payment-app-demo/pay',
+};
+
 async function pay(details) {
   const request = new PaymentRequest([
     basicCard,
     applePay,
     googlePay,
-    bobPay
+    bobPay,
+    paymentAppDemo
   ], details);
 
   const result = await request.show();
